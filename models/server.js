@@ -1,6 +1,7 @@
 const express = require('express')
 require('dotenv').config()
 const cors = require('cors')
+const { dbConnection } = require('../database/config.db')
 
 class Server{
     constructor(){
@@ -9,7 +10,8 @@ class Server{
         this.usuarioPath='/api/usuarios'
         
 
-        
+        //base de datos 
+        this.dbConnet()
        
         //Midleware
         this.middlewares()
@@ -18,6 +20,9 @@ class Server{
         this.routes()
     }
 
+    async  dbConnet(){
+       await dbConnection(process.env.MONGODB_CNN)
+    } 
     
     middlewares(){
 
@@ -31,7 +36,7 @@ class Server{
         this.app.use(express.static('public'))
     }    
     
-ro
+
    routes(){
     this.app.use( this.usuarioPath, require('../routes/usuarios'))
     } 
