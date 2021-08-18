@@ -20,9 +20,19 @@ const rolesPermitidos= async(rol='')=>{
      }
  }
 
+ //validar si el id existe en la base de datos 
+ const buscarIdEnBaseDatos=async(id)=>{
+
+     const buscarId=await Usuarios.findById(id)
+     if (!buscarId) {
+        throw new Error(`El id ${id} no esta registrado en la BD  `)
+     }
+ }
+
 
 
 module.exports={
     rolesPermitidos,
-    emailExiste
+    emailExiste,
+    buscarIdEnBaseDatos
     }

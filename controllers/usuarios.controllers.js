@@ -13,13 +13,7 @@ const crearUsuario=async(req, res=response)=> {
     const {nombre,correo,password,rol}=req.body
     const usuario=new Usuarios({nombre,correo,password,rol})
 
-    //validar si el correo ya existe en la base de datos 
-    const existeCorreo=await Usuarios.findOne({correo})
-    if (existeCorreo) {
-        return res.status(400).json({
-            msg:'El correo ya existe en la base de datos '
-        })
-    }
+  
     
     //encryptar contraseña
     const salt = bcrypt.genSaltSync();
@@ -36,9 +30,26 @@ const crearUsuario=async(req, res=response)=> {
         
     })
 }
-const actualizarUsuario=(req, res=response)=> {
-    res.send('actualizar desde controllers ')
+
+const actualizarUsuario= async(req, res=response)=> {
+   const id=req.params.id
+   const {_id,password,correo,google,...resto}=req.body
+
+   if(password){
+       //encryptar contraseña
+    const salt = bcrypt.genSaltSync();
+    resto.password = bcrypt.hashSync(password, salt);
+   }
+
+     const usuario=await Usuarios.findByIdAndUpdate(id,resto)
+    
+    res.json({
+        ok:true,
+        msg:id,
+        usuario
+    })
 }
+
 const eliminarUsuario=(req, res=response)=> {
     res.send('eliminar desde controllers ')
 }
